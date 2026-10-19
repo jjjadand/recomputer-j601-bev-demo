@@ -1,0 +1,16 @@
+[Unit]
+Description=Thor TensorRT camera LiDAR fusion worker
+Requires=jetson-bev-net.service
+After=jetson-bev-net.service
+
+[Service]
+EnvironmentFile=-/home/seeed/jetson-bev-demo/deploy/network.env
+WorkingDirectory=/home/seeed/jetson-bev-demo
+Environment=LD_LIBRARY_PATH=/usr/local/cuda/lib64
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/sbin/ip netns exec bev-edge /usr/sbin/runuser -u seeed -- /home/seeed/jetson-bev-demo/.venv/bin/python /home/seeed/jetson-bev-demo/jetson/worker.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

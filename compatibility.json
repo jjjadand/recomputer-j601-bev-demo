@@ -1,0 +1,43 @@
+{
+  "profile": "app-dev",
+  "overall_status": "needs-adjustments",
+  "issues": [
+    {
+      "component": "jetpack",
+      "message": "JetPack series is unknown; compatibility checks are partial.",
+      "installed": "7.2-b187"
+    },
+    {
+      "component": "package-manager",
+      "message": "pip is unavailable; Python app workflow will be limited."
+    }
+  ],
+  "blocked_items": [],
+  "ready_items": [
+    {
+      "component": "app-domain",
+      "value": "robotics"
+    }
+  ],
+  "alternatives": [],
+  "recommended_actions": [
+    {
+      "id": "action-001",
+      "summary": "Collect explicit JetPack/L4T evidence.",
+      "command": "dpkg-query -W -f='${Version}\\n' nvidia-jetpack && cat /etc/nv_tegra_release",
+      "requires_sudo": false,
+      "risk_level": "low",
+      "rollback_hint": "No rollback needed.",
+      "verify_command": "echo \"JetPack/L4T evidence collected\""
+    },
+    {
+      "id": "action-002",
+      "summary": "Install pip prerequisites.",
+      "command": "sudo apt-get update && sudo apt-get install -y python3-pip",
+      "requires_sudo": true,
+      "risk_level": "medium",
+      "rollback_hint": "sudo apt-get remove -y python3-pip",
+      "verify_command": "python3 -m pip --version"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=BEV demo management gateway and link monitor
+Wants=jetson-bev-worker.service
+After=jetson-bev-worker.service nv-l4t-usb-device-mode-runtime.service
+
+[Service]
+EnvironmentFile=-/home/seeed/jetson-bev-demo/deploy/network.env
+User=seeed
+WorkingDirectory=/home/seeed/jetson-bev-demo
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/seeed/jetson-bev-demo/.venv/bin/python /home/seeed/jetson-bev-demo/jetson/gateway.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

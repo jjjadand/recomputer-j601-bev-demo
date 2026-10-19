@@ -1,0 +1,15 @@
+[Unit]
+Description=BEV demo Ethernet transport
+Wants=NetworkManager.service
+After=NetworkManager.service
+Before=jetson-bev-worker.service
+
+[Service]
+EnvironmentFile=-/home/seeed/jetson-bev-demo/deploy/network.env
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash /home/seeed/jetson-bev-demo/jetson/network.sh start
+ExecStop=/bin/bash /home/seeed/jetson-bev-demo/jetson/network.sh stop
+
+[Install]
+WantedBy=multi-user.target

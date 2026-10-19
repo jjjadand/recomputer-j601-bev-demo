@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1017">
+  <title>reComputer Robotics J6015 · Fusion Observatory</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <aside class="rail">
+    <a class="brand-mark" href="/" aria-label="Thor Fusion 首页"><svg viewBox="0 0 40 40"><path d="M20 3 35 12v16L20 37 5 28V12Z"/><path d="m20 11 8 5v9l-8 5-8-5v-9Z"/><path d="M20 3v8m15 1-7 4m7 12-7-3M20 37v-7M5 28l7-3M5 12l7 4"/></svg></a>
+    <div class="rail-divider"></div>
+    <button class="rail-button active" data-nav="sensors" title="传感器输入" aria-label="传感器输入"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10 5-3v10l-5-3Z"/></svg></button>
+    <button class="rail-button" data-nav="fusion" title="融合与建图" aria-label="融合与建图"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></svg></button>
+    <button class="rail-button" data-nav="network" title="网络与算力" aria-label="网络与算力"><svg viewBox="0 0 24 24"><path d="M4 16V8m5 12V4m6 13V7m5 13V4"/></svg></button>
+    <div class="rail-bottom"><span class="rail-led"></span><span>THOR</span></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar">
+      <div class="wordmark"><span class="device-name">reComputer Robotics J6015</span><span class="version">JetPack 7.2</span></div>
+      <div class="topbar-right"><label class="language-control"><select id="language-select" aria-label="Interface language"><option value="zh">中文</option><option value="en">English</option></select></label><span class="dataset-tag">nuScenes <span>·</span> MINI</span><span class="status-pill" id="connection"><i></i>连接中</span><button class="icon-button" id="fullscreen" title="全屏展示" aria-label="全屏展示"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div>
+    </header>
+    <main>
+      <div class="heading-row">
+        <div><div class="eyebrow"><span class="tiny-cross">+</span> MULTIMODAL SPATIAL INTELLIGENCE</div><h1>让每一束数据，<span>看见空间。</span></h1><p class="subtitle">六路视觉 × 激光雷达 <b>·</b> Jetson Thor GPU 融合 <b>·</b> 实时 BEV 建图</p></div>
+        <div class="scene-meta"><span class="scene-label">CURRENT SCENE</span><strong id="scene-name">scene-0061</strong><span><i class="live-dot"></i> 连续配对传感器回放</span><select id="scene-select" aria-label="选择场景"></select></div>
+      </div>
+      <div class="error-banner" id="error" hidden></div>
+      <section class="kpi-row">
+        <article class="kpi"><div class="kpi-top"><span>感知处理速率</span><span class="mini-icon">↗</span></div><div class="kpi-value"><strong id="fps-value">—</strong><span>FPS</span><canvas class="tiny-chart" id="fps-chart"></canvas></div><div class="kpi-bottom"><span class="dot mint"></span><span id="latency-value">等待首帧计算</span><span class="kpi-note" id="gpu-pipeline">GPU PIPELINE</span></div></article>
+        <article class="kpi"><div class="kpi-top"><span>当前点云</span><span class="mini-icon">⠿</span></div><div class="kpi-value"><strong id="points-value">—</strong><span>POINTS</span></div><div class="kpi-bottom"><span class="dot blue"></span>真实 LiDAR 扫描<span class="kpi-note">360° FOV</span></div></article>
+        <article class="kpi"><div class="kpi-top"><span>融合空间目标</span><span class="mini-icon">⌖</span></div><div class="kpi-value"><strong id="detections-value">—</strong><span>OBJECTS</span><div class="object-dots" id="object-dots"></div></div><div class="kpi-bottom"><span class="dot amber"></span><span id="vision-count">六路视觉＋雷达测距</span><span class="kpi-note">LIVE INFERENCE</span></div></article>
+        <article class="kpi"><div class="kpi-top"><span>以太网链路利用率</span><span class="mini-icon">⇄</span></div><div class="kpi-value"><strong id="load-value">—</strong><span>%</span><div class="capacity-bars" id="capacity-bars"></div></div><div class="kpi-bottom"><span class="dot mint"></span>双向链路实测<span class="kpi-note">ETHERNET</span></div></article>
+      </section>
+      <nav class="data-tabs" role="tablist" aria-label="数据视图">
+        <button id="tab-sensors" class="data-tab selected" data-section="sensors" role="tab" aria-selected="true" aria-controls="section-sensors" tabindex="0"><span class="tab-number">01</span><span><strong>传感器输入</strong><small>六路相机与雷达投影</small></span></button>
+        <button id="tab-fusion" class="data-tab" data-section="fusion" role="tab" aria-selected="false" aria-controls="section-fusion" tabindex="-1"><span class="tab-number">02</span><span><strong>融合与建图</strong><small>点云、BEV 与空间检测</small></span></button>
+        <button id="tab-network" class="data-tab" data-section="network" role="tab" aria-selected="false" aria-controls="section-network" tabindex="-1"><span class="tab-number">03</span><span><strong>网络与算力</strong><small>网口速率与 GPU 负载</small></span></button>
+      </nav>
+      <section id="section-sensors" class="data-section" role="tabpanel" aria-labelledby="tab-sensors" tabindex="0">
+        <article class="panel camera-panel" id="sensor-panel">
+          <div class="panel-title"><div><span class="section-number">01</span><h2>传感器输入</h2></div><span class="small-badge mint-text">6 CAM + 1 LiDAR</span></div>
+          <div class="camera-toolbar"><span><i class="live-dot"></i><span id="sensor-frame">等待配对帧</span></span><button class="text-toggle active" id="projection-toggle" aria-pressed="true">雷达投影 <i></i></button></div>
+          <div class="camera-grid" id="cameras"></div>
+          <div class="input-footer"><div class="sensor-symbol">⌁</div><div><strong>LIDAR_TOP</strong><span id="lidar-caption">加载真实激光雷达扫描</span></div><span class="input-format">XYZ · I · RING</span></div>
+          <div class="sensor-stream"><span>输入数据包</span><strong id="input-size">—</strong><span class="stream-arrow">→</span><span class="stream-target">GPU 处理端</span></div>
+        </article>
+      </section>
+      <section id="section-fusion" class="data-section" role="tabpanel" aria-labelledby="tab-fusion" tabindex="0" hidden>
+        <div class="fusion-layout">
+        <article class="panel fusion-panel" id="fusion-panel">
+          <div class="panel-title"><div><span class="section-number">02</span><h2>空间融合视图</h2></div><span class="small-badge"><i class="dot mint"></i> CUDA + TensorRT</span></div>
+          <div class="view-toolbar"><div class="view-tabs" role="tablist"><button class="selected" data-view="compare" role="tab" aria-selected="true">鸟瞰＋3D 对比</button><button data-view="fusion" role="tab" aria-selected="false">几何融合 BEV</button><button data-view="map" role="tab" aria-selected="false">三维位姿累积</button></div><button class="icon-button" id="reset-camera" title="重置视角" aria-label="重置当前视角"><svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 7M4 4v7h7"/></svg></button></div>
+          <div class="viewports compare" id="viewports">
+            <div class="viewer" id="viewer"><img id="bev-view" alt="道路、车道线与物体掩码鸟瞰"><div class="viewer-top"><span class="viewer-label"><i></i><span id="view-label">车道线鸟瞰</span></span><span class="frame-id" id="view-frame">FRAME —</span></div><div class="viewer-bottom"><div class="coordinate-icon">↑<span>FWD</span></div><span class="viewer-scale" id="viewer-scale">60 m × 60 m</span></div></div>
+            <div class="viewer" id="cloud-pane"><div id="three-view"></div><div id="labels-3d"></div><div class="viewer-top"><span class="viewer-label"><i></i><span>3D 点云</span></span><span class="frame-id" id="cloud-frame">FRAME —</span><button class="icon-button pane-reset" id="reset-cloud" title="重置三维视角" aria-label="重置三维视角"><svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 7M4 4v7h7"/></svg></button></div><div class="viewer-bottom"><div class="viewer-legend"><span><i class="dot mint"></i>车辆</span><span><i class="dot amber"></i>行人</span><span><i class="dot blue"></i>空间点云</span></div><span class="viewer-scale" id="cloud-scale">100 m × 100 m</span></div></div>
+            <div class="viewer-loading" id="viewer-loading"><div class="loading-rings"></div><strong>正在建立空间感知</strong><span>真实六路影像与点云，正在 Jetson GPU 上处理</span></div>
+          </div>
+          <p class="compute-note" id="view-note">蓝灰：道路 · 浅黄：车道线 · 彩色：物体轮廓 · 滚轮缩放、拖动平移、双击复位</p>
+          <p class="compute-evidence" id="compute-evidence">等待后端计算结果</p>
+          <div class="intermediate-heading"><span>处理中间结果</span><span>GPU COMPUTED</span></div><div class="intermediates"><button data-view="lidar"><img id="inter-lidar" alt="点云投影形成的 BEV 高度与密度图"><span><i class="dot blue"></i>雷达 BEV</span></button><button data-view="vision"><img id="inter-vision" alt="视觉检测与标定点云关联后的空间落点"><span><i class="dot amber"></i>视觉空间落点</span></button><button data-view="fusion"><img id="inter-fusion" alt="融合检测结果鸟瞰图"><span><i class="dot mint"></i>融合检测</span></button></div>
+        </article>
+          <article class="panel objects-panel"><div class="compact-title"><h2>空间检测目标</h2><span class="object-count" id="object-count">0</span></div><div class="object-list" id="object-list"><div class="empty-state">等待视觉与点云关联结果</div></div><div class="objects-footnote">颜色表示类别 · 3D 框为雷达关联几何估计</div></article>
+        </div>
+      </section>
+      <section id="section-network" class="data-section" role="tabpanel" aria-labelledby="tab-network" tabindex="0" hidden>
+        <div class="network-layout">
+          <article class="panel network-panel" id="network-panel">
+            <div class="panel-title"><div><span class="section-number">03</span><h2>以太网传输速率</h2></div><span class="small-badge">ETHERNET</span></div>
+            <div class="network-capacity"><span class="ethernet-icon">⇄</span><div><strong id="link-capacity">10 <small>Gbps</small></strong><span id="link-description">FULL DUPLEX · TCP</span></div><span class="link-led" id="link-led"></span></div>
+            <label class="monitor-control"><span>监控接口</span><select id="interface-select" aria-label="选择网口"><option value="data">主数据链路</option></select></label>
+            <div class="rate-pair"><div><span><i class="dot mint"></i><span id="input-direction">输入</span></span><strong id="tx-rate">—<small>Mbps</small></strong></div><div><span><i class="dot blue"></i><span id="output-direction">输出</span></span><strong id="rx-rate">—<small>Mbps</small></strong></div></div>
+            <div class="network-chart"><canvas id="network-chart"></canvas><div class="chart-labels"><span>60 秒实时窗口</span><span id="chart-max">10 Gbps</span></div></div>
+            <div class="network-totals"><span><span id="input-total-label">累计输入</span> <b id="tx-total">—</b></span><span><span id="output-total-label">累计输出</span> <b id="rx-total">—</b></span></div>
+            <div class="physical-heading"><span>Jetson 有线网口</span><span id="ports-summary">—</span></div><div class="ethernet-ports" id="ethernet-ports"></div>
+          </article>
+          <div class="network-side">
+          <article class="panel compute-panel"><div class="compact-title"><h2>THOR 算力监控</h2><span class="chip-badge">FP16</span></div><div class="resource-row"><span>GPU</span><div class="resource-track"><i id="gpu-bar"></i></div><strong id="gpu-value">—</strong></div><div class="resource-row"><span>CPU</span><div class="resource-track blue-bar"><i id="cpu-bar"></i></div><strong id="cpu-value">—</strong></div><div class="resource-row"><span>内存</span><div class="resource-track purple-bar"><i id="memory-bar"></i></div><strong id="memory-value">—</strong></div><p class="compute-note" id="gpu-note">GPU 监控暂不可用</p><p class="compute-note" id="gpu-stages" hidden>GPU 加速：图像 · 检测 · 点云 · 建图</p><div class="compute-bottom"><span id="temperature">— °C</span><span id="power">— W GPU</span><span class="gpu-model" id="model-detail">NVIDIA THOR</span></div></article>
+            <article class="panel load-panel"><div class="compact-title"><h2>链路测试设置</h2><span class="chip-badge">TCP</span></div>
+            <label class="traffic-control"><span>附加网口压测</span><select id="traffic-select" aria-label="附加 TCP 压测速率"><option value="0">关闭 · 仅传感器流</option><option value="100">100 Mbps / 方向</option><option value="300">300 Mbps / 方向</option><option value="600">600 Mbps / 方向</option><option value="900">900 Mbps / 方向</option></select></label>
+            <label class="traffic-control"><span>压测方向</span><select id="traffic-direction" aria-label="压测方向"><option value="bidir">同时双向</option><option value="input">输入 TX</option><option value="output">输出 RX</option></select></label>
+            <p class="traffic-note" id="traffic-note">速率来自真实接口计数器</p>
+            <details class="network-details"><summary>链路详情</summary><p id="network-source"></p><label class="gateway-label" for="gateway-url">Jetson 传输地址</label><div class="gateway-control"><input id="gateway-url" type="url" spellcheck="false" value="http://192.168.55.18:9000" aria-label="Jetson 传输地址"><button id="gateway-apply">应用</button></div></details>
+            </article>
+          </div>
+        </div>
+      <section class="pipeline-panel"><div class="pipeline-caption"><span class="tiny-cross">+</span><strong>数据流全链路</strong><span>真实数据 · 实际 GPU 计算 · 实际流量计数</span></div><div class="pipeline-flow"><div class="pipeline-node"><span class="node-icon">▦</span><div><strong>六目＋LiDAR</strong><small id="dataset-caption">nuScenes · 39 配对帧</small></div></div><span class="flow-connector"><i></i></span><div class="pipeline-node"><span class="node-icon mint-text">⇄</span><div><strong>以太网输入</strong><small>TCP 传感器数据流</small></div></div><span class="flow-connector"><i></i></span><div class="pipeline-node gpu-node"><span class="node-icon mint-text">◈</span><div><strong>Jetson Thor</strong><small id="pipeline-duration">TensorRT + CUDA</small></div></div><span class="flow-connector"><i></i></span><div class="pipeline-node"><span class="node-icon blue-text">⇄</span><div><strong>以太网输出</strong><small>图像 · 点云 · BEV · 检测</small></div></div><span class="flow-connector"><i></i></span><div class="pipeline-node"><span class="node-icon">⌘</span><div><strong>可视化界面</strong><small id="viewer-caption">PC 浏览器 · 实时结果</small></div></div></div></section>
+      </section>
+      <footer><span>THOR FUSION LAB <span> / </span> FP16 视觉检测 · 标定点云融合 · GPU 占用建图</span><span id="footer-status">连接 Jetson 处理中</span></footer>
+    </main>
+  </div>
+  <script type="module" src="/assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "model": "YOLOP road / lane segmentation",
+  "license": "MIT",
+  "source": "https://raw.githubusercontent.com/hustvl/YOLOP/main/weights/yolop-640-640.onnx",
+  "source_sha256": "cd66a3e0087a7258ae07768cc02cb742eed93865727ae4c9baf969b8fa190696",
+  "onnx_sha256": "7c631c82ed5d767ef2401735c9ad23c4313bf5a4a1516940f9033c59edbb6529",
+  "input": [
+    6,
+    3,
+    640,
+    640
+  ],
+  "outputs": [
+    "drive_area_seg",
+    "lane_line_seg"
+  ],
+  "preprocess": "RGB / 255; ImageNet mean [0.485,0.456,0.406], std [0.229,0.224,0.225]; centered 114 letterbox",
+  "training_data": "BDD100K; nuScenes domain accuracy not measured",
+  "engine": "Build on target: yolop-road-thor-b6.engine, TensorRT FP16",
+  "ground_truth_used": false
+}

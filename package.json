@@ -1,0 +1,9 @@
+{
+  "name": "thor-fusion-observatory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Six-camera and LiDAR fusion demo with actual CUDA inference and shaped Ethernet telemetry",
+  "type": "module",
+  "dependencies": {"three": "0.180.0"},
+  "scripts": {"start": "python3 server.py"}
+}

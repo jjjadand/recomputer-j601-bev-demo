@@ -1,0 +1,8 @@
+{
+  "model": "YOLO26m",
+  "source": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26m.pt",
+  "license": "Ultralytics AGPL-3.0",
+  "export": "ONNX opset 17, six cameras, 960x960, YOLO26 end-to-end output",
+  "onnx_sha256": "84816613366b358162317a9d32b1fb2f13f2101745c05a1bd7b64bce62cc8a0f",
+  "engine": "Build on target Thor: TensorRT 10.16.2 / CUDA 13.2 / FP16"
+}

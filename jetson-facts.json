@@ -1,0 +1,34 @@
+{
+  "device": {
+    "model": "Seeed reComputer Carrier j6015 board",
+    "arch": "aarch64"
+  },
+  "os": {
+    "pretty_name": "Ubuntu 24.04.4 LTS",
+    "kernel": "6.8.12-1021-tegra"
+  },
+  "jetpack": {
+    "installed_version": "7.2-b187",
+    "series": "unknown"
+  },
+  "l4t": {
+    "release": "R39",
+    "raw": "# R39 (release), REVISION: 2.0, GCID: 45755727, BOARD: generic, EABI: aarch64, DATE: Mon Jun  1 09:28:48 PM UTC 2026"
+  },
+  "cuda": {
+    "version": "unknown",
+    "nvcc_path": "unknown"
+  },
+  "python": {
+    "version": "3.12.3"
+  },
+  "memory": {
+    "total_kb": 128829248
+  },
+  "storage": {
+    "root_available_kb": 903650460
+  },
+  "package_managers": [
+    "apt"
+  ]
+}

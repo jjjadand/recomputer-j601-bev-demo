@@ -1,0 +1,9 @@
+.venv*/
+__pycache__/
+node_modules/
+data/
+models/*.engine
+models/*.onnx
+models/*.pt
+logs/
+*.pyc

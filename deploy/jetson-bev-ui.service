@@ -1,0 +1,12 @@
+[Unit]
+Description=Thor Fusion Observatory PC UI and sensor replay
+After=network.target
+
+[Service]
+WorkingDirectory=/other_data/jetson-bev-demo
+ExecStart=/usr/bin/python3 -u /other_data/jetson-bev-demo/server.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
